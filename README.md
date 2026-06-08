@@ -4,6 +4,8 @@ MCP-based toolkit for interacting with the [0G](https://0g.exploreme.pro) blockc
 
 **Your private key never leaves your machine.** MCP prepares unsigned transactions, but signing always happens locally. The key is never sent to the AI model or remote server. Two levels of protection: **Simple** — a guard hook blocks the agent from reading `.env`; **Secure** — an advanced signing daemon keeps the key encrypted and isolated in a separate process, the agent only receives the signed hash.
 
+> ⚠️ **MAINNET — REAL FUNDS.** The default network is 0G mainnet (chainId 16661). `/send` and `prepare_*` move **real 0G**. There is **no faucet on mainnet** — fund your address from an exchange/bridge, or run the kit against 0G testnet. For demos, use a throwaway wallet and prefer **secure mode with manual approval** (`npm run signer -- --manual`) so every signature needs your `y/n`.
+
 **Two ways to use:**
 
 1. **Subscription** (free) — connect MCP to Claude Code / Cursor / Codex, use your existing subscription
@@ -56,9 +58,10 @@ claude
 Claude Code auto-detects `.mcp.json` and connects to 0G. Use the built-in skills:
 
 ```
-/wallet    — Get testnet tokens from faucet
-/send      — Send tokens to a random address from a recent block
+/wallet    — Show wallet address & balance (faucet is testnet-only)
+/send      — Send 0G to a random address from a recent block
 /deploy    — Deploy and verify a smart contract
+/stake     — Delegate 0G to a validator, or review validators/APR
 ```
 
 Or just chat: *"Send 0.001 0G to a random address from the latest block"*
@@ -205,7 +208,8 @@ docker compose up signer
 │   └── skills/
 │       ├── wallet.md            # /wallet skill
 │       ├── send.md              # /send skill
-│       └── deploy.md            # /deploy skill
+│       ├── deploy.md            # /deploy skill
+│       └── stake.md             # /stake skill
 │
 ├── scripts/
 │   ├── wallet-manager.ts        # Create/import wallet
@@ -242,17 +246,19 @@ docker compose up signer
 
 ## MCP Tools
 
-The 0G MCP server at `https://api.0g.exploreme.pro/mcp` provides 69 tools:
+The 0G MCP server at `https://api.0g.exploreme.pro/mcp` exposes the explorer's read tools plus the write tools below:
 
 | Category | Tools |
 |----------|-------|
-| Transactions | `prepare_native_transfer`, `prepare_erc20_transfer`, `prepare_transaction`, `broadcast_signed_raw_transaction`, `wait_for_transaction` |
-| Balances | `get_balance`, `get_token_balance` |
-| Blocks | `list_evm_blocks`, `get_evm_block_by_height` |
-| Contracts | `read_evm_contract`, `verify_evm_contract_standard_json` |
-| Tokens | `list_erc20_tokens`, `get_erc20_token_by_address` |
-| Faucet | `claim_faucet_tokens`, `get_faucet_payout_status` |
-| Explorer | `explorer_search`, `get_account_by_address` |
+| Transactions (write) | `prepare_native_transfer`, `prepare_erc20_transfer`, `prepare_transaction`, `broadcast_signed_raw_transaction`, `wait_for_transaction` |
+| Balances / accounts | `rpc_native_balance`, `rpc_token_balance`, `get_account`, `list_account_transactions`, `list_account_tokens` |
+| Blocks / txs | `list_blocks`, `get_block`, `get_transaction`, `tx_summary`, `list_transactions` |
+| Contracts | `rpc_read_contract`, `get_contract`, `contract_code`, `verifier_compiler_versions`, `verify_contract_std_json`, `get_verification_status` |
+| Tokens / NFTs | `list_tokens`, `get_token`, `list_token_holders`, `nft_instance_detail` |
+| Staking (write + read) | `prepare_delegate`, `prepare_undelegate`, `list_validators`, `get_validator`, `validator_delegations`, `validator_apr` |
+| 0G DA / storage | `list_da_events`, `da_daily_volume`, `list_da_signers`, `list_storage_files`, `get_storage_file`, `list_storage_miners`, `storage_daily_volume` |
+| Explorer | `search`, `stats_overview`, `prices` |
+| Faucet (testnet only) | `claim_faucet_tokens`, `get_faucet_payout_status` |
 
 ## Requirements
 
