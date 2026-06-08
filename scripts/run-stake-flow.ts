@@ -12,12 +12,21 @@ import { signTransaction } from "../src/wallet.js";
 const VALIDATOR = process.env.ZEROG_VALIDATOR || "0x0000000000000000000000000000000000000000";
 const AMOUNT = process.env.ZEROG_STAKE_AMOUNT || "0.1";
 
+// The AI SDK tool `execute` signature requires a second ToolExecutionOptions
+// argument. When invoking tools directly (outside a generateText loop) the MCP
+// client only reads `options.abortSignal`, so an empty stub is sufficient and
+// behavior-preserving.
+const callOpts = { toolCallId: "stake-flow", messages: [] };
+
 async function main() {
   const from = getWalletAddress();
   const client = await createMCPClient({ transport: { type: "http", url: getMcpUrl() } });
   const tools = await client.tools();
 
-  const prep = await tools.prepare_delegate.execute({ from, validator: VALIDATOR, amount: AMOUNT });
+  const prep = await tools.prepare_delegate.execute(
+    { from, validator: VALIDATOR, amount: AMOUNT },
+    callOpts,
+  );
   // The MCP server returns the unsigned tx as an OBJECT at structuredContent.data
   // (already parsed — do NOT JSON.parse it).
   const unsigned = (prep as any).structuredContent?.data as Record<string, unknown>;
@@ -25,12 +34,15 @@ async function main() {
   if ((unsigned as { error?: boolean }).error) throw new Error(JSON.stringify(unsigned));
 
   const signed = await signTransaction(unsigned);
-  const br = await tools.broadcast_signed_raw_transaction.execute({ serializedTransaction: signed });
+  const br = await tools.broadcast_signed_raw_transaction.execute(
+    { serializedTransaction: signed },
+    callOpts,
+  );
   // The broadcast tool returns { hash } at structuredContent.data (an object).
   const hash = (br as any).structuredContent?.data?.hash as string | undefined;
   if (!hash) throw new Error(`Broadcast failed: ${JSON.stringify(br)}`);
 
-  const waited = await tools.wait_for_transaction.execute({ hash, confirmations: 1 });
+  const waited = await tools.wait_for_transaction.execute({ hash, confirmations: 1 }, callOpts);
   console.log(JSON.stringify({ hash, waited }, null, 2));
   await client.close();
 }
