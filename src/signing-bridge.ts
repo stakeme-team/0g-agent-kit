@@ -46,11 +46,21 @@ export function augmentToolsWithSigning(
           // Call original MCP tool
           const result = await originalExecute(args, options);
 
-          // Parse the unsigned tx from result
+          // Extract the unsigned tx from the MCP result. The 0G MCP server
+          // returns it as an OBJECT at structuredContent.data (already parsed).
+          // Fall back to a JSON string body, then to the raw result.
           let unsigned: Record<string, unknown>;
           try {
-            unsigned =
-              typeof result === "string" ? JSON.parse(result) : result;
+            const structuredData = (
+              result as { structuredContent?: { data?: unknown } } | null
+            )?.structuredContent?.data;
+            if (structuredData && typeof structuredData === "object") {
+              unsigned = structuredData as Record<string, unknown>;
+            } else if (typeof result === "string") {
+              unsigned = JSON.parse(result);
+            } else {
+              unsigned = result as Record<string, unknown>;
+            }
           } catch {
             // If we can't parse, return as-is
             return result;
