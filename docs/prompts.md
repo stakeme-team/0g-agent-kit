@@ -45,3 +45,22 @@ Search for the top ERC-20 tokens on 0G and show their details.
 ```
 Look up my wallet's transaction history.
 ```
+
+## 0G-native prompts
+
+### Staking
+- "List 0G validators by APR and show the top 5 with their commission."
+- "Delegate 0.5 0G to validator <addr>: prepare, sign, broadcast, and confirm the delegation."
+- "Show my current delegations and the network APR."
+
+### Data Availability (DA)
+- "Show 0G DA daily volume for the last 7 days."
+- "List recent DA events and the active DA signers."
+
+### Storage
+- "List the latest 0G storage files and the top storage miners."
+- "Show 0G storage daily volume trend this month."
+
+### Explorer
+- "Search 0G for <address-or-tx-or-block> and summarize what it is."
+- "Give me a 0G network overview: latest block, tx throughput, gas, native price."
