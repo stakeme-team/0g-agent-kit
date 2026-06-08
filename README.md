@@ -1,15 +1,41 @@
-# 0G Agent Kit
+<div align="center">
 
-MCP-based toolkit for interacting with the [0G](https://0g.exploreme.pro) blockchain through AI agents or terminal. Claim faucet tokens, send transactions, deploy & verify contracts, explore blocks and tokens — all from a single workspace, without switching between explorer, faucet, and wallet UIs.
+# ⚡ 0G Agent Kit
 
-**Your private key never leaves your machine.** MCP prepares unsigned transactions, but signing always happens locally. The key is never sent to the AI model or remote server. Two levels of protection: **Simple** — a guard hook blocks the agent from reading `.env`; **Secure** — an advanced signing daemon keeps the key encrypted and isolated in a separate process, the agent only receives the signed hash.
+**All-in-one MCP toolkit for the [0G](https://0g.exploreme.pro) blockchain, in TypeScript.**
 
-> ⚠️ **MAINNET — REAL FUNDS.** The default network is 0G mainnet (chainId 16661). `/send` and `prepare_*` move **real 0G**. There is **no faucet on mainnet** — fund your address from an exchange/bridge, or run the kit against 0G testnet. For demos, use a throwaway wallet and prefer **secure mode with manual approval** (`npm run signer -- --manual`) so every signature needs your `y/n`.
+Wallet operations · local-only signing · transfers · contract deploy & verify · staking · full chain / DA / storage exploration — from **Claude Code**, **Cursor**, **Codex**, or directly via the **Vercel AI SDK**.
 
-**Two ways to use:**
+Built for **humans**. Perfect for **AI**.
 
-1. **Subscription** (free) — connect MCP to Claude Code / Cursor / Codex, use your existing subscription
-2. **AI SDK** (developers) — programmatic agents via Vercel AI SDK with Claude or OpenAI
+[![MCP](https://img.shields.io/badge/MCP-server-6E56CF)](https://modelcontextprotocol.io)
+[![0G](https://img.shields.io/badge/0G-mainnet_16661-00B3A4)](https://0g.exploreme.pro)
+[![Node](https://img.shields.io/badge/Node-%E2%89%A520-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![viem](https://img.shields.io/badge/built_with-viem-FFC517)](https://viem.sh)
+[![License](https://img.shields.io/badge/License-MIT-blue)](#license)
+
+</div>
+
+---
+
+## Why 0G Agent Kit
+
+**Your private key never leaves your machine.** MCP only prepares *unsigned* transactions — signing happens locally, and the key is never sent to the AI model or a remote server.
+
+**Two protection levels.**
+- **Simple** — a guard hook blocks the agent from reading `.env`.
+- **Secure** — encrypted keystore + a signing daemon in a separate, isolated process; the agent only ever receives the signed hex.
+
+**Two ways to use.**
+- **Subscription** (free) — connect MCP to Claude Code / Cursor / Codex and use your existing subscription.
+- **AI SDK** (developers) — programmatic agents via the Vercel AI SDK with Claude or OpenAI.
+
+**0G-native.** Beyond plain EVM: delegate to validators (`prepare_delegate`), read validator APR & delegations, and explore 0G **Data Availability** and **Storage** (`list_da_events`, `list_storage_files`, …).
+
+> ⚠️ **Mainnet — real funds.** The default network is **0G mainnet (chainId 16661)**. `/send`, `/deploy`, and `/stake` move **real 0G**. There is **no faucet on mainnet** — fund your address from an exchange/bridge, or point the kit at **0G testnet (Galileo)** for free demos. Prefer **secure mode with manual approval** (`npm run signer -- --manual`) so every signature needs your `y/n`.
+
+---
 
 ## Architecture
 
@@ -30,101 +56,105 @@ MCP-based toolkit for interacting with the [0G](https://0g.exploreme.pro) blockc
 │ Signs tx │  prepare_*      │
 │ locally  │  broadcast      │
 │          │  query blocks   │
-│ Key in   │  faucet         │
-│ .env or  │  verify         │
+│ Key in   │  stake / verify │
+│ .env or  │  DA / storage   │
 │ keystore │  explorer       │
 └──────────┴─────────────────┘
 ```
 
-**Key principle:** The private key NEVER leaves your machine. MCP prepares unsigned transactions, signing happens locally, then the signed transaction is broadcast back through MCP.
+**Key principle:** the private key NEVER leaves your machine. MCP prepares the unsigned tx → you sign locally → the signed tx is broadcast back through MCP.
 
-## Quick Start: Subscription (Claude Code)
+---
+
+## Quick Start — Claude Code (subscription)
 
 ```bash
 # Clone
 git clone https://github.com/stakeme-team/0g-agent-kit
 cd 0g-agent-kit
 
-# Install (in Docker for safety)
+# Install (in Docker for supply-chain safety)
 docker run --rm --network host -v "$(pwd):/app" -w /app node:20-alpine npm install
 
-# Create wallet
+# Create a wallet
 npx tsx scripts/wallet-manager.ts generate --simple
 
 # Open Claude Code
 claude
 ```
 
-Claude Code auto-detects `.mcp.json` and connects to 0G. Use the built-in skills:
+Claude Code auto-detects `.mcp.json` and connects to the 0G MCP server. Then just chat:
 
-```
-/wallet    — Show wallet address & balance (faucet is testnet-only)
-/send      — Send 0G to a random address from a recent block
-/deploy    — Deploy and verify a smart contract
-/stake     — Delegate 0G to a validator, or review validators/APR
-```
+> *"Send 0.001 0G to a random address from the latest block"*
 
-Or just chat: *"Send 0.001 0G to a random address from the latest block"*
+> See also: [Cursor setup](docs/cursor-setup.md) · [Codex setup](docs/codex-setup.md) · [ready-made prompts](docs/prompts.md)
 
-> See also: [Cursor setup](docs/cursor-setup.md) | [Codex setup](docs/codex-setup.md)
+---
 
-## Quick Start: AI SDK (Programmatic)
+## Quick Start — AI SDK (programmatic)
 
 ```bash
-# Clone & install
 git clone https://github.com/stakeme-team/0g-agent-kit
 cd 0g-agent-kit
 docker run --rm --network host -v "$(pwd):/app" -w /app node:20-alpine npm install
 
-# Configure
 cp .env.example .env
 npx tsx scripts/wallet-manager.ts generate --simple
 # Edit .env: add ANTHROPIC_API_KEY or OPENAI_API_KEY
 
-# Run demos
-npm run demo:wallet    # Claim faucet tokens
-npm run demo:send      # Send tokens to random address
-npm run demo:deploy    # Deploy & verify contract
+npm run demo:wallet    # show wallet & balance (faucet = testnet only)
+npm run demo:send      # send 0G to a random recent address
+npm run demo:deploy    # deploy & verify a contract
 ```
 
-Switch between Claude and OpenAI:
+Switch model provider in `.env`:
+
 ```env
 AI_PROVIDER=anthropic   # or openai
 ```
 
+---
+
+## Skills
+
+Built-in Claude Code / Cursor skills (slash commands):
+
+| Skill | What it does |
+|-------|--------------|
+| `/wallet` | Show wallet address & native balance (claims faucet on testnet) |
+| `/send` | Send 0G to a random address from a recent block |
+| `/deploy` | Deploy **and** verify a smart contract |
+| `/stake` | Delegate 0G to a validator, or review validators & APR *(write path experimental — see [Staking](#staking))* |
+
+---
+
 ## Security
 
-### Simple Mode (default)
+### Simple mode (default)
 
-Private key in `.env`, protected by guard hooks that block the agent from reading it.
+Private key in `.env`, protected by a guard hook that blocks the agent from reading it.
 
 ```bash
 npx tsx scripts/wallet-manager.ts generate --simple
-```
-
-Guard blocks 20+ attack vectors (tested):
-```bash
 npm run security-test
-# ✓ cat .env           → BLOCKED
-# ✓ grep PRIVATE .env  → BLOCKED
-# ✓ echo $PRIVATE_KEY  → BLOCKED
-# ✓ python3 read .env  → BLOCKED
-# ... 26/26 passed ✓
+# ✓ cat .env            → BLOCKED
+# ✓ grep PRIVATE .env   → BLOCKED
+# ✓ echo $PRIVATE_KEY   → BLOCKED
+# ✓ python3 read .env   → BLOCKED
+# ... 27/27 passed ✓
 ```
 
-### Secure Mode (signing daemon)
+### Secure mode (signing daemon)
 
-Private key encrypted in keystore, decrypted only in a separate daemon process. Agent physically cannot access the key.
+Private key encrypted in a keystore, decrypted only inside a separate daemon process. The agent physically cannot reach the key.
 
 ```bash
-# Create encrypted wallet
+# Create an encrypted wallet
 npx tsx scripts/wallet-manager.ts generate --secure
 
-# Start daemon (separate terminal)
-npx tsx scripts/signer-daemon.ts
-# Unlock password: ********
-# ✓ Signer ready: 0x742d...
-# ✓ Socket: /tmp/0g-signer.sock
+# Start the daemon (separate terminal)
+npx tsx scripts/signer-daemon.ts            # auto-approve
+npx tsx scripts/signer-daemon.ts --manual   # ask y/n per transaction
 ```
 
 ```
@@ -136,63 +166,43 @@ npx tsx scripts/signer-daemon.ts
 └───────────────────┘sock └───────────────────┘
 ```
 
-#### Approval Modes
+In `--manual` mode every signing request prints the tx details and waits for your `y/n` — ideal on mainnet.
 
-**Auto mode** (default) — signs transactions immediately:
-```bash
-npx tsx scripts/signer-daemon.ts
-```
-
-**Manual mode** — requires human approval for each transaction:
-```bash
-npx tsx scripts/signer-daemon.ts --manual
-```
-
-In manual mode, every signing request shows transaction details and waits for your approval. The agent (Claude) just waits until you decide:
-
-```
-  ⚠  Sign transaction?
-     Type:    TRANSFER
-     To:      0x5f98ce551fFbd3C5C6bA571e0F793F8ADE228F96
-     Value:   0.01 (10000000000000000 wei)
-     Gas:     25200
-
-     Approve? [y/n]: y
-     ✓ Signed: to=0x5f98ce... value=10000000000000000
-```
-
-If you reject (`n`), the agent receives an error and can inform you that the transaction was declined.
-
-#### Password File (for Docker detached)
-
-To run the daemon without interactive password input:
+### Docker isolation
 
 ```bash
-# Create password file
-echo "your_password" > .keystore/.password
-chmod 600 .keystore/.password
-
-# Run detached
-docker compose up -d signer
-
-# Check logs
-docker compose logs signer
+docker compose run --rm install                  # install deps in a container
+docker compose run --rm dev npx tsx examples/02-send-tokens.ts
+docker compose up signer                          # signer daemon, NO network access
 ```
 
-### Docker Isolation
+---
 
-Protect against supply chain attacks in npm packages:
+## Staking
 
-```bash
-# Install deps in container (node_modules isolated)
-docker compose run --rm install
+`/stake` and `prepare_delegate` / `prepare_undelegate` target the 0G staking contract (`0xea224dBB…`). The **read** path — `list_validators`, `get_validator`, `validator_apr`, `validator_delegations` — is solid.
 
-# Run demos in container
-docker compose run --rm dev npx tsx examples/01-wallet-and-faucet.ts
+> ⚠️ The **write** path is **experimental**: the staking contract is a BeaconProxy whose delegate ABI couldn't be confirmed on-chain, so a best-effort `delegate(address)` / `undelegate(address,uint256)` signature is used. Verify on **testnet** before mainnet; if a delegation reverts, adjust the ABI server-side.
 
-# Signer daemon with NO network access
-docker compose up signer
-```
+---
+
+## MCP Tools
+
+The 0G MCP server at `https://api.0g.exploreme.pro/mcp` exposes the explorer's read tools plus the write tools below:
+
+| Category | Tools |
+|----------|-------|
+| **Transactions** (write) | `prepare_native_transfer`, `prepare_erc20_transfer`, `prepare_transaction`, `broadcast_signed_raw_transaction`, `wait_for_transaction` |
+| **Staking** (write + read) | `prepare_delegate`, `prepare_undelegate`, `list_validators`, `get_validator`, `validator_delegations`, `validator_apr` |
+| **Balances / accounts** | `rpc_native_balance`, `rpc_token_balance`, `get_account`, `list_account_transactions`, `list_account_tokens` |
+| **Blocks / txs** | `list_blocks`, `get_block`, `get_transaction`, `tx_summary`, `list_transactions` |
+| **Contracts** | `rpc_read_contract`, `get_contract`, `contract_code`, `verifier_compiler_versions`, `verify_contract_std_json`, `get_verification_status` |
+| **Tokens / NFTs** | `list_tokens`, `get_token`, `list_token_holders`, `nft_instance_detail` |
+| **0G DA / storage** | `list_da_events`, `da_daily_volume`, `list_da_signers`, `list_storage_files`, `get_storage_file`, `list_storage_miners`, `storage_daily_volume` |
+| **Explorer** | `search`, `stats_overview`, `prices` |
+| **Faucet** (testnet only) | `claim_faucet_tokens`, `get_faucet_payout_status` |
+
+---
 
 ## Project Structure
 
@@ -205,67 +215,44 @@ docker compose up signer
 │
 ├── .claude/
 │   ├── settings.json            # Guard hook config
-│   └── skills/
-│       ├── wallet.md            # /wallet skill
-│       ├── send.md              # /send skill
-│       ├── deploy.md            # /deploy skill
-│       └── stake.md             # /stake skill
+│   └── skills/                  # /wallet · /send · /deploy · /stake
 │
 ├── scripts/
-│   ├── wallet-manager.ts        # Create/import wallet
+│   ├── wallet-manager.ts        # Create / import wallet
 │   ├── sign-tx.ts               # Sign tx (stdin → stdout)
 │   ├── signer-daemon.ts         # Signing daemon (secure mode)
 │   ├── guard.sh                 # Block agent from reading keys
-│   └── security-test.ts         # Test guard (20+ attack vectors)
+│   ├── security-test.ts         # Test guard (20+ attack vectors)
+│   └── run-stake-flow.ts        # Scripted delegate flow
 │
 ├── src/                         # AI SDK core library
 │   ├── mcp-client.ts            # MCP client factory
-│   ├── wallet.ts                # Wallet (address only for LLM)
+│   ├── wallet.ts                # Wallet (address only for the LLM)
 │   ├── signing-bridge.ts        # Auto-sign prepare_* results
 │   ├── agent.ts                 # Agent factory (Claude + OpenAI)
 │   └── utils.ts                 # Helpers
 │
-├── examples/                    # AI SDK demos
-│   ├── 01-wallet-and-faucet.ts
-│   ├── 02-send-tokens.ts
-│   └── 03-deploy-and-verify.ts
-│
-├── contracts/
-│   ├── SimpleStorage.sol
-│   └── compiled/SimpleStorage.json
-│
-├── docs/
-│   ├── claude-code-setup.md
-│   ├── cursor-setup.md
-│   ├── codex-setup.md
-│   └── prompts.md               # Ready-to-use prompts
-│
+├── examples/                    # AI SDK demos (wallet · send · deploy)
+├── contracts/                   # SimpleStorage.sol (+ compiled)
+├── docs/                        # setup guides + prompts
 ├── Dockerfile
 └── docker-compose.yml
 ```
 
-## MCP Tools
-
-The 0G MCP server at `https://api.0g.exploreme.pro/mcp` exposes the explorer's read tools plus the write tools below:
-
-| Category | Tools |
-|----------|-------|
-| Transactions (write) | `prepare_native_transfer`, `prepare_erc20_transfer`, `prepare_transaction`, `broadcast_signed_raw_transaction`, `wait_for_transaction` |
-| Balances / accounts | `rpc_native_balance`, `rpc_token_balance`, `get_account`, `list_account_transactions`, `list_account_tokens` |
-| Blocks / txs | `list_blocks`, `get_block`, `get_transaction`, `tx_summary`, `list_transactions` |
-| Contracts | `rpc_read_contract`, `get_contract`, `contract_code`, `verifier_compiler_versions`, `verify_contract_std_json`, `get_verification_status` |
-| Tokens / NFTs | `list_tokens`, `get_token`, `list_token_holders`, `nft_instance_detail` |
-| Staking (write + read) | `prepare_delegate`, `prepare_undelegate`, `list_validators`, `get_validator`, `validator_delegations`, `validator_apr` |
-| 0G DA / storage | `list_da_events`, `da_daily_volume`, `list_da_signers`, `list_storage_files`, `get_storage_file`, `list_storage_miners`, `storage_daily_volume` |
-| Explorer | `search`, `stats_overview`, `prices` |
-| Faucet (testnet only) | `claim_faucet_tokens`, `get_faucet_payout_status` |
+---
 
 ## Requirements
 
-- Node.js 20+
-- Docker (recommended for security)
-- For subscription path: Claude Pro/Max, Cursor Pro, or ChatGPT Pro
-- For AI SDK path: Anthropic or OpenAI API key
+- **Node.js 20+** and **npm**
+- **Docker** — optional, recommended for supply-chain-isolated installs and the network-less signer
+- **Subscription path:** Claude Pro/Max, Cursor Pro, or ChatGPT Pro
+- **AI SDK path:** an Anthropic or OpenAI API key
+
+### Run against 0G testnet (Galileo)
+
+For free, low-risk demos, point the kit at a 0G MCP server configured for testnet (chainId `16602`, RPC `https://evmrpc-testnet.0g.ai`, faucet `https://faucet.0g.ai`) and set `ZEROG_MCP_URL` in `.env` accordingly.
+
+---
 
 ## License
 
