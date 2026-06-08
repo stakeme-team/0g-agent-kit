@@ -53,13 +53,12 @@ const userPrompt = `Please deploy and verify the SimpleStorage contract:
 2. Deploy the contract:
    - Call prepare_transaction with from="${walletAddress}", data="${compiled.bytecode}" (no "to" field — this is a contract creation)
    - Use the "signedTransaction" from the result with broadcast_signed_raw_transaction
-3. Wait for the transaction receipt (wait_for_transaction)
-4. Get the receipt to find the deployed contract address (get_transaction_receipt)
-5. Verify the contract on the explorer:
-   - First call get_evm_compiler_versions to confirm the Solidity version
-   - Then call verify_evm_contract_standard_json with the contract address, compiler version, and a standard JSON input containing the source code
-6. Test the contract by calling retrieve() using read_evm_contract
-7. Report: contract address, deployment tx hash, verification status, and retrieve() result`;
+3. Wait for the transaction receipt with wait_for_transaction — its "contractAddress" is the deployed address
+4. Verify the contract on the explorer:
+   - First call verifier_compiler_versions to confirm the Solidity version
+   - Then call verify_contract_std_json with the contract address, compiler version, and a standard JSON input containing the source code
+5. Test the contract by calling retrieve() using rpc_read_contract
+6. Report: contract address, deployment tx hash, verification status, and retrieve() result`;
 
 console.log("=== 0G Agent Kit: Deploy & Verify Demo ===");
 console.log(`Wallet: ${walletAddress}`);

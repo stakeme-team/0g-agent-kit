@@ -28,9 +28,11 @@ IMPORTANT SECURITY RULES:
 Your task is to help the user get testnet tokens from the faucet.`;
 
 const userPrompt = `Please do the following:
-1. Check my wallet balance using get_balance
-2. Claim testnet tokens from the faucet using claim_faucet_tokens with my address
-3. Poll the faucet status using get_faucet_payout_status until it's complete (retry up to 10 times with a brief pause)
+1. Check my wallet balance using rpc_native_balance
+2. Claim tokens from the faucet using claim_faucet_tokens with my address.
+   Note: on 0G mainnet there is no faucet — if claim_faucet_tokens reports "no faucet",
+   just report my current balance and stop (the faucet is testnet-only).
+3. If a payout was requested, poll get_faucet_payout_status until it's complete (retry up to 10 times with a brief pause)
 4. Check my balance again to confirm I received the tokens
 5. Report the final balance`;
 
