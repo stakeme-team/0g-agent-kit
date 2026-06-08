@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import * as path from "path";
 
 const GUARD_SCRIPT = path.resolve("scripts/guard.sh");
@@ -62,7 +62,10 @@ console.log("=== Security Guard Test ===\n");
 console.log("--- Attacks (must be BLOCKED) ---");
 for (const attack of ATTACKS) {
   try {
-    execSync(`bash ${GUARD_SCRIPT} '${attack.cmd.replace(/'/g, "'\\''")}'`, {
+    // Pass the command as a single argv element (no shell) so pipes/quotes in
+    // the attack string reach guard.sh verbatim and aren't re-parsed by the
+    // host shell (cmd.exe on Windows mangles single-quoted pipes otherwise).
+    execFileSync("bash", [GUARD_SCRIPT, attack.cmd], {
       stdio: "pipe",
     });
     // Exit 0 = not blocked = FAIL
@@ -85,7 +88,7 @@ for (const attack of ATTACKS) {
 console.log("\n--- Safe commands (must be ALLOWED) ---");
 for (const safe of SAFE_COMMANDS) {
   try {
-    execSync(`bash ${GUARD_SCRIPT} '${safe.cmd.replace(/'/g, "'\\''")}'`, {
+    execFileSync("bash", [GUARD_SCRIPT, safe.cmd], {
       stdio: "pipe",
     });
     // Exit 0 = allowed = PASS
