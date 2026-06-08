@@ -1,7 +1,7 @@
 {
   "name": "0g-agent-kit",
   "version": "0.1.0",
-  "description": "AI Agent Kit for 0G blockchain — interact via MCP with Claude Code, Cursor, Codex, or programmatically with AI SDK",
+  "description": "AI Agent Kit for the 0G blockchain — interact via MCP with Claude Code, Cursor, Codex, or programmatically with AI SDK",
   "type": "module",
   "scripts": {
     "wallet:simple": "tsx scripts/wallet-manager.ts generate --simple",
