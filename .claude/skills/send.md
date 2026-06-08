@@ -1,6 +1,6 @@
 ---
 name: send
-description: Send native tokens to a random address from a recent block
+description: Send 0G to a random address from a recent block
 ---
 
 # /send — Send Tokens
@@ -12,11 +12,11 @@ description: Send native tokens to a random address from a recent block
    grep WALLET_ADDRESS .env | cut -d'=' -f2
    ```
 
-2. Check balance using MCP `get_balance`. If insufficient, suggest running `/wallet` first.
+2. Check balance using MCP `rpc_native_balance`. If insufficient, suggest running `/wallet` first.
 
 3. Find a recipient address:
-   - Call MCP `list_evm_blocks` with `limit: 1` to get the latest block
-   - Call MCP `get_evm_block_by_height` with the block height to get transactions
+   - Call MCP `list_blocks` with `limit: 1` to get the latest block
+   - Call MCP `get_block` with the block height to get transactions
    - Pick a random address from the block's transactions (a `from` or `to` address)
    - If no transactions found, try an earlier block
 
@@ -35,11 +35,8 @@ description: Send native tokens to a random address from a recent block
 6. Broadcast:
    - Call MCP `broadcast_signed_raw_transaction` with `serializedTransaction` = signed hex
 
-7. Wait for confirmation:
-   - Call MCP `wait_for_transaction` with the tx hash
-
-8. Show receipt:
-   - Call MCP `get_transaction_receipt` with the tx hash
+7. Wait for confirmation and show the receipt:
+   - Call MCP `wait_for_transaction` with the tx hash — it returns the receipt
    - Report: tx hash, from, to, amount, gas used, status
 
 ## SECURITY

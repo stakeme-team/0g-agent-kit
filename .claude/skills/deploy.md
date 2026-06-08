@@ -12,7 +12,7 @@ description: Deploy and verify a smart contract on 0G
    grep WALLET_ADDRESS .env | cut -d'=' -f2
    ```
 
-2. Check balance using MCP `get_balance`. Deployment needs gas.
+2. Check balance using MCP `rpc_native_balance`. Deployment needs gas.
 
 3. Read the compiled contract:
    ```bash
@@ -35,20 +35,19 @@ description: Deploy and verify a smart contract on 0G
    - Call MCP `broadcast_signed_raw_transaction` with signed hex
 
 7. Wait for receipt:
-   - Call MCP `wait_for_transaction` with tx hash
-   - Call MCP `get_transaction_receipt` — extract `contractAddress`
+   - Call MCP `wait_for_transaction` with tx hash — the receipt's `contractAddress` is the deployed address
 
 8. Verify the contract:
-   - Call MCP `get_evm_compiler_versions` to find Solidity versions
+   - Call MCP `verifier_compiler_versions` to find Solidity versions
    - Read source: `cat contracts/SimpleStorage.sol`
-   - Call MCP `verify_evm_contract_standard_json` with:
+   - Call MCP `verify_contract_std_json` with:
      - `address`: deployed contract address
      - `compilerType`: "solidity"
      - `compilerVersion`: matching version (e.g., "v0.8.28+commit.7893614a")
      - `standardJson`: Solidity standard JSON input with the source code
 
 9. Test the contract:
-   - Call MCP `read_evm_contract` with:
+   - Call MCP `rpc_read_contract` with:
      - `address`: contract address
      - `abi`: the ABI from compiled JSON
      - `functionName`: "retrieve"

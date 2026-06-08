@@ -1,9 +1,11 @@
 ---
 name: wallet
-description: Create wallet and claim testnet tokens from faucet
+description: Show wallet address & balance (faucet is testnet-only)
 ---
 
-# /wallet — Wallet Setup & Faucet
+# /wallet — Wallet Address & Balance
+
+> Default network is 0G **mainnet** (chainId 16661), which has **no faucet**. On mainnet, show the address and balance and tell the user to fund it from an exchange/bridge. The faucet steps below apply only when running against a 0G **testnet** deployment.
 
 ## Steps
 
@@ -18,18 +20,19 @@ description: Create wallet and claim testnet tokens from faucet
 
 3. Get the wallet address from the output above.
 
-4. Check current balance using MCP tool `get_balance` with the wallet address.
+4. Check current balance using MCP tool `rpc_native_balance` with the wallet address.
 
-5. If balance is 0 or low, claim faucet tokens:
+5. If balance is 0 or low, claim faucet tokens (testnet only):
    - Call MCP `claim_faucet_tokens` with `address` = wallet address
-   - Note the `requestId` from the response
+   - On mainnet this returns "no faucet" — in that case just report the balance and stop
+   - Otherwise note the `requestId` from the response
 
 6. Poll faucet status:
    - Call MCP `get_faucet_payout_status` with the `requestId`
    - If status is not "completed", wait a few seconds and poll again (max 10 attempts)
 
 7. Verify final balance:
-   - Call MCP `get_balance` with the wallet address
+   - Call MCP `rpc_native_balance` with the wallet address
    - Report the balance to the user
 
 ## SECURITY
