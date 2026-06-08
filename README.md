@@ -1,6 +1,8 @@
 <div align="center">
 
-# ⚡ 0G Agent Kit
+<img src="assets/logo.svg" alt="0G Agent Kit" width="96" height="96">
+
+# 0G Agent Kit
 
 **All-in-one MCP toolkit for the [0G](https://0g.exploreme.pro) blockchain, in TypeScript.**
 
@@ -10,6 +12,7 @@ Built for **humans**. Perfect for **AI**.
 
 [![MCP](https://img.shields.io/badge/MCP-server-6E56CF)](https://modelcontextprotocol.io)
 [![0G](https://img.shields.io/badge/0G-mainnet_16661-00B3A4)](https://0g.exploreme.pro)
+[![Docs](https://img.shields.io/badge/docs-0g.ai-2D6CDF)](https://docs.0g.ai)
 [![Node](https://img.shields.io/badge/Node-%E2%89%A520-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![viem](https://img.shields.io/badge/built_with-viem-FFC517)](https://viem.sh)
