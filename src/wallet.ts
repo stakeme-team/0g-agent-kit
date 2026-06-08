@@ -2,7 +2,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import * as net from "net";
 import { getEnv, getSignerMode } from "./utils.js";
 
-const SOCKET_PATH = process.env.SIGNER_SOCKET || "/tmp/pharos-signer.sock";
+const SOCKET_PATH = process.env.SIGNER_SOCKET || "/tmp/0g-signer.sock";
 
 /**
  * Get wallet address (safe — no private key exposure)

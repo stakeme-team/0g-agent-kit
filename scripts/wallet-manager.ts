@@ -172,7 +172,7 @@ if (command === "generate") {
   const mode = args.includes("--secure") ? "secure" : "simple";
   await importKey(key, mode);
 } else {
-  console.log(`Pharos Wallet Manager
+  console.log(`0G Wallet Manager
 
 Usage:
   wallet-manager generate [--simple|--secure]   Create a new wallet

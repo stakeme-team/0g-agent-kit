@@ -3,7 +3,7 @@ import { getMcpUrl } from "./utils.js";
 
 let mcpClient: Awaited<ReturnType<typeof createMCPClient>> | null = null;
 
-export async function getPharosMCPClient() {
+export async function getZeroGMCPClient() {
   if (mcpClient) return mcpClient;
 
   const url = getMcpUrl();
@@ -19,7 +19,7 @@ export async function getPharosMCPClient() {
 }
 
 export async function getMCPTools(): Promise<Record<string, any>> {
-  const client = await getPharosMCPClient();
+  const client = await getZeroGMCPClient();
   return client.tools();
 }
 

@@ -1,7 +1,7 @@
 {
   "mcpServers": {
-    "pharos": {
-      "url": "https://api.pharos.exploreme.pro/mcp"
+    "0g": {
+      "url": "https://api.0g.exploreme.pro/mcp"
     }
   }
 }

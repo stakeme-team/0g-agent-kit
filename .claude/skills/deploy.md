@@ -1,6 +1,6 @@
 ---
 name: deploy
-description: Deploy and verify a smart contract on Pharos
+description: Deploy and verify a smart contract on 0G
 ---
 
 # /deploy — Deploy & Verify Smart Contract

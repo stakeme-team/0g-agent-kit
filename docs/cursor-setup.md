@@ -1,4 +1,4 @@
-# Cursor + Pharos MCP Setup
+# Cursor + 0G MCP Setup
 
 ## Prerequisites
 
@@ -10,8 +10,8 @@
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/stakeme-team/pharos-agent-kit
-cd pharos-agent-kit
+git clone https://github.com/stakeme-team/0g-agent-kit
+cd 0g-agent-kit
 
 # 2. Install dependencies
 npm install
@@ -23,18 +23,18 @@ npm run wallet:simple
 cursor .
 ```
 
-Cursor automatically detects `.cursor/mcp.json` and connects to the Pharos MCP server.
+Cursor automatically detects `.cursor/mcp.json` and connects to the 0G MCP server.
 
 ## Usage
 
 In Cursor's AI chat (Cmd+L), ask:
 
 ```
-"Check my Pharos wallet balance"
+"Check my 0G wallet balance"
 "Send 0.001 tokens to a random address from a recent block"
 "Deploy the SimpleStorage contract from contracts/ and verify it"
 ```
 
 ## Verify MCP Connection
 
-Go to Settings > Developer > MCP to see connected servers. `pharos` should be listed.
+Go to Settings > Developer > MCP to see connected servers. `0g` should be listed.

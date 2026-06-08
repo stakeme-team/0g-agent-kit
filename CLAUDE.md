@@ -1,10 +1,10 @@
-# Pharos Agent Kit
+# 0G Agent Kit
 
-You are working with the Pharos blockchain through an MCP server. This file tells you how to interact with it safely and effectively.
+You are working with the 0G blockchain through an MCP server. This file tells you how to interact with it safely and effectively.
 
 ## MCP Server
 
-The Pharos MCP server is connected automatically via `.mcp.json`. It provides tools for:
+The 0G MCP server is connected automatically via `.mcp.json`. It provides tools for:
 - **Transactions**: `prepare_native_transfer`, `prepare_erc20_transfer`, `prepare_transaction`, `broadcast_signed_raw_transaction`, `wait_for_transaction`
 - **Balances**: `get_balance`, `get_token_balance`
 - **Blocks**: `list_evm_blocks`, `get_evm_block_by_height`

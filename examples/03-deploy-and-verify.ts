@@ -24,8 +24,8 @@ const compiled = JSON.parse(
   fs.readFileSync("contracts/compiled/SimpleStorage.json", "utf-8")
 );
 
-const systemPrompt = `You are a blockchain assistant for the Pharos network.
-You have access to MCP tools for interacting with the Pharos blockchain.
+const systemPrompt = `You are a blockchain assistant for the 0G network.
+You have access to MCP tools for interacting with the 0G blockchain.
 
 The user's wallet address is: ${walletAddress}
 
@@ -61,7 +61,7 @@ const userPrompt = `Please deploy and verify the SimpleStorage contract:
 6. Test the contract by calling retrieve() using read_evm_contract
 7. Report: contract address, deployment tx hash, verification status, and retrieve() result`;
 
-console.log("=== Pharos Agent Kit: Deploy & Verify Demo ===");
+console.log("=== 0G Agent Kit: Deploy & Verify Demo ===");
 console.log(`Wallet: ${walletAddress}`);
 console.log(`Contract: SimpleStorage (${compiled.compilerVersion})`);
 

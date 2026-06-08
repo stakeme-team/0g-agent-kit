@@ -1,4 +1,4 @@
-# Claude Code + Pharos MCP Setup
+# Claude Code + 0G MCP Setup
 
 ## Prerequisites
 
@@ -10,8 +10,8 @@
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/stakeme-team/pharos-agent-kit
-cd pharos-agent-kit
+git clone https://github.com/stakeme-team/0g-agent-kit
+cd 0g-agent-kit
 
 # 2. Install dependencies
 npm install
@@ -25,7 +25,7 @@ npm run wallet:secure
 claude
 ```
 
-That's it! Claude Code automatically detects `.mcp.json` and connects to the Pharos MCP server.
+That's it! Claude Code automatically detects `.mcp.json` and connects to the 0G MCP server.
 
 ## Usage
 
@@ -41,7 +41,7 @@ Or just chat naturally:
 
 ```
 "Check my wallet balance"
-"Send 0.001 PHRS to a random address"
+"Send 0.001 0G to a random address"
 "Deploy the SimpleStorage contract and verify it"
 ```
 
@@ -70,4 +70,4 @@ claude
 
 ## Verify MCP Connection
 
-Inside Claude Code, run `/mcp` to see connected MCP servers. You should see `pharos` listed with its tools.
+Inside Claude Code, run `/mcp` to see connected MCP servers. You should see `0g` listed with its tools.

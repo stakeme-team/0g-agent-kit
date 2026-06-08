@@ -15,17 +15,17 @@ Claim testnet tokens from the faucet for my wallet and show me the balance after
 ## Send Tokens
 
 ```
-Find a random address from the latest block on Pharos and send 0.001 PHRS to it. Show me the transaction receipt.
+Find a random address from the latest block on 0G and send 0.001 0G to it. Show me the transaction receipt.
 ```
 
 ```
-Send 0.01 PHRS to address 0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18 and wait for confirmation.
+Send 0.01 0G to address 0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18 and wait for confirmation.
 ```
 
 ## Deploy & Verify Contract
 
 ```
-Deploy the SimpleStorage contract from contracts/SimpleStorage.sol to Pharos and verify it on the explorer.
+Deploy the SimpleStorage contract from contracts/SimpleStorage.sol to 0G and verify it on the explorer.
 ```
 
 ```
@@ -35,11 +35,11 @@ Deploy SimpleStorage, then call store(42), then call retrieve() to confirm the v
 ## Exploration
 
 ```
-Show me the last 5 blocks on Pharos with their transaction counts.
+Show me the last 5 blocks on 0G with their transaction counts.
 ```
 
 ```
-Search for the top ERC-20 tokens on Pharos and show their details.
+Search for the top ERC-20 tokens on 0G and show their details.
 ```
 
 ```

@@ -20,9 +20,9 @@ export function getWalletAddress(): string {
 
 export function getMcpUrl(): string {
   return getEnv(
-    "PHAROS_MCP_URL",
+    "ZEROG_MCP_URL",
     false
-  ) || "https://api.pharos.exploreme.pro/mcp";
+  ) || "https://api.0g.exploreme.pro/mcp";
 }
 
 export function getSignerMode(): "simple" | "secure" {

@@ -5,7 +5,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import type { Account } from "viem";
 import { decryptKeystore } from "./keystore-utils.js";
 
-const SOCKET_PATH = process.env.SIGNER_SOCKET || "/tmp/pharos-signer.sock";
+const SOCKET_PATH = process.env.SIGNER_SOCKET || "/tmp/0g-signer.sock";
 const KEYSTORE_FILE = ".keystore/wallet.json";
 const PASSWORD_FILE = process.env.PASSWORD_FILE || ".keystore/.password";
 const SIGN_MODE = process.argv.includes("--manual") ? "manual" : "auto";

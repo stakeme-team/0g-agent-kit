@@ -19,8 +19,8 @@ import { getWalletAddress } from "../src/utils.js";
 
 const walletAddress = getWalletAddress();
 
-const systemPrompt = `You are a blockchain assistant for the Pharos network.
-You have access to MCP tools for interacting with the Pharos blockchain.
+const systemPrompt = `You are a blockchain assistant for the 0G network.
+You have access to MCP tools for interacting with the 0G blockchain.
 
 The user's wallet address is: ${walletAddress}
 
@@ -45,7 +45,7 @@ const userPrompt = `Please do the following:
 6. Wait for the transaction to confirm (wait_for_transaction)
 7. Get the receipt (get_transaction_receipt) and report the details`;
 
-console.log("=== Pharos Agent Kit: Send Tokens Demo ===");
+console.log("=== 0G Agent Kit: Send Tokens Demo ===");
 console.log(`Wallet: ${walletAddress}`);
 
 await runAgent({

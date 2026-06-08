@@ -1,6 +1,6 @@
-# Pharos Agent Kit
+# 0G Agent Kit
 
-MCP-based toolkit for interacting with the [Pharos](https://pharos.exploreme.pro) blockchain through AI agents or terminal. Claim faucet tokens, send transactions, deploy & verify contracts, explore blocks and tokens — all from a single workspace, without switching between explorer, faucet, and wallet UIs.
+MCP-based toolkit for interacting with the [0G](https://0g.exploreme.pro) blockchain through AI agents or terminal. Claim faucet tokens, send transactions, deploy & verify contracts, explore blocks and tokens — all from a single workspace, without switching between explorer, faucet, and wallet UIs.
 
 **Your private key never leaves your machine.** MCP prepares unsigned transactions, but signing always happens locally. The key is never sent to the AI model or remote server. Two levels of protection: **Simple** — a guard hook blocks the agent from reading `.env`; **Secure** — an advanced signing daemon keeps the key encrypted and isolated in a separate process, the agent only receives the signed hash.
 
@@ -40,8 +40,8 @@ MCP-based toolkit for interacting with the [Pharos](https://pharos.exploreme.pro
 
 ```bash
 # Clone
-git clone https://github.com/stakeme-team/pharos-agent-kit
-cd pharos-agent-kit
+git clone https://github.com/stakeme-team/0g-agent-kit
+cd 0g-agent-kit
 
 # Install (in Docker for safety)
 docker run --rm --network host -v "$(pwd):/app" -w /app node:20-alpine npm install
@@ -53,7 +53,7 @@ npx tsx scripts/wallet-manager.ts generate --simple
 claude
 ```
 
-Claude Code auto-detects `.mcp.json` and connects to Pharos. Use the built-in skills:
+Claude Code auto-detects `.mcp.json` and connects to 0G. Use the built-in skills:
 
 ```
 /wallet    — Get testnet tokens from faucet
@@ -61,7 +61,7 @@ Claude Code auto-detects `.mcp.json` and connects to Pharos. Use the built-in sk
 /deploy    — Deploy and verify a smart contract
 ```
 
-Or just chat: *"Send 0.001 PHRS to a random address from the latest block"*
+Or just chat: *"Send 0.001 0G to a random address from the latest block"*
 
 > See also: [Cursor setup](docs/cursor-setup.md) | [Codex setup](docs/codex-setup.md)
 
@@ -69,8 +69,8 @@ Or just chat: *"Send 0.001 PHRS to a random address from the latest block"*
 
 ```bash
 # Clone & install
-git clone https://github.com/stakeme-team/pharos-agent-kit
-cd pharos-agent-kit
+git clone https://github.com/stakeme-team/0g-agent-kit
+cd 0g-agent-kit
 docker run --rm --network host -v "$(pwd):/app" -w /app node:20-alpine npm install
 
 # Configure
@@ -121,7 +121,7 @@ npx tsx scripts/wallet-manager.ts generate --secure
 npx tsx scripts/signer-daemon.ts
 # Unlock password: ********
 # ✓ Signer ready: 0x742d...
-# ✓ Socket: /tmp/pharos-signer.sock
+# ✓ Socket: /tmp/0g-signer.sock
 ```
 
 ```
@@ -194,8 +194,8 @@ docker compose up signer
 ## Project Structure
 
 ```
-pharos-agent-kit/
-├── CLAUDE.md                    # Agent instructions for Pharos
+0g-agent-kit/
+├── CLAUDE.md                    # Agent instructions for 0G
 ├── .mcp.json                    # Claude Code MCP config
 ├── .cursor/mcp.json             # Cursor MCP config
 ├── .codex/config.toml           # Codex MCP config (via mcp-remote)
@@ -242,7 +242,7 @@ pharos-agent-kit/
 
 ## MCP Tools
 
-The Pharos MCP server at `https://api.pharos.exploreme.pro/mcp` provides 69 tools:
+The 0G MCP server at `https://api.0g.exploreme.pro/mcp` provides 69 tools:
 
 | Category | Tools |
 |----------|-------|

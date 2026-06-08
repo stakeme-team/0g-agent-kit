@@ -5,7 +5,7 @@ import { config } from "dotenv";
 
 config();
 
-const SOCKET_PATH = process.env.SIGNER_SOCKET || "/tmp/pharos-signer.sock";
+const SOCKET_PATH = process.env.SIGNER_SOCKET || "/tmp/0g-signer.sock";
 const SIGNER_MODE = process.env.SIGNER_MODE || "simple";
 
 // --- Read unsigned tx from stdin ---
