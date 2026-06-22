@@ -2,13 +2,13 @@ import { createMCPClient } from "@ai-sdk/mcp";
 import { getMcpUrl, getWalletAddress } from "../src/utils.js";
 import { signTransaction } from "../src/wallet.js";
 
-// EXPERIMENTAL write path — verify on a 0G testnet deployment before mainnet.
-// The 0G staking contract is a BeaconProxy whose delegate ABI could not be
-// confirmed, so prepare_delegate uses a best-effort delegate(address) signature.
-// If the delegation reverts, treat staking writes as experimental (the read
-// path — list_validators / validator_apr / validator_delegations — is solid).
+// Mainnet spends real 0G — verify on a 0G testnet deployment before mainnet.
+// prepare_delegate builds a delegate(address) call (selector 0x5c19a95c) TO the
+// per-validator contract, passing `from` (the delegator) as the address arg.
+// So VALIDATOR must be a per-validator contract address — the `addr` field from
+// list_validators / get_validator (0x-prefixed), NOT the staking root contract.
 
-// A validator address to delegate to (replace with one from list_validators).
+// A per-validator contract address to delegate to (the `addr` from list_validators).
 const VALIDATOR = process.env.ZEROG_VALIDATOR || "0x0000000000000000000000000000000000000000";
 const AMOUNT = process.env.ZEROG_STAKE_AMOUNT || "0.1";
 

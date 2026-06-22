@@ -50,7 +50,7 @@ Look up my wallet's transaction history.
 
 ### Staking
 - "List 0G validators by APR and show the top 5 with their commission."
-- "Delegate 0.5 0G to validator <addr>: prepare, sign, broadcast, and confirm the delegation."
+- "Delegate 0.5 0G to validator <addr> (use the per-validator contract address from list_validators): prepare, sign, broadcast, and confirm the delegation."
 - "Show my current delegations and the network APR."
 
 ### Data Availability (DA)

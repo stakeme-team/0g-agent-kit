@@ -53,12 +53,12 @@ You CANNOT sign transactions directly. Use the signing script:
 
 ## Staking Flow (0G-native)
 
-1. `list_validators` → choose a validator (note its address + `validator_apr`).
-2. `prepare_delegate` with `from`=wallet, `validator`=address, `amount`=0G to stake.
+1. `list_validators` → choose a validator (note its `addr` + `validator_apr`).
+2. `prepare_delegate` with `from`=wallet, `validator`=the chosen validator's `addr` (the **per-validator contract address**, 0x-prefixed — **not** the staking root contract), `amount`=0G to stake.
 3. Sign → `broadcast_signed_raw_transaction` → `wait_for_transaction`.
 4. `validator_delegations` (or `get_account`) to confirm the new delegation.
 
-> ⚠️ **Experimental write path — verify on testnet first.** The 0G staking contract is a BeaconProxy and its delegate ABI could not be confirmed, so `prepare_delegate` / `prepare_undelegate` use a best-effort `delegate(address)` / `undelegate(address,uint256)` signature. The READ path (`list_validators`, `validator_apr`, `validator_delegations`) is solid. If a delegation reverts, treat staking writes as experimental and confirm against a testnet deployment before spending real 0G.
+> 📌 **Delegate/undelegate target the per-validator contract.** `prepare_delegate` / `prepare_undelegate` build a tx **to the validator's per-validator contract** (its `list_validators` / `get_validator` `addr`, 0x-prefixed) calling `delegate(address)` / `undelegate(address,uint256)` with **your own** (`from`) address as the delegator. Pass `validator` = that per-validator contract address and `from` = your wallet. Undelegate takes `shares` (not an amount). Mainnet spends real 0G — verify on a testnet deployment first.
 
 ## Faucet Flow (testnet only)
 

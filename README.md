@@ -127,7 +127,7 @@ Built-in Claude Code / Cursor skills (slash commands):
 | `/wallet` | Show wallet address & native balance (claims faucet on testnet) |
 | `/send` | Send 0G to a random address from a recent block |
 | `/deploy` | Deploy **and** verify a smart contract |
-| `/stake` | Delegate 0G to a validator, or review validators & APR *(write path experimental — see [Staking](#staking))* |
+| `/stake` | Delegate 0G to a validator, or review validators & APR *(see [Staking](#staking))* |
 
 ---
 
@@ -183,9 +183,9 @@ docker compose up signer                          # signer daemon, NO network ac
 
 ## Staking
 
-`/stake` and `prepare_delegate` / `prepare_undelegate` target the 0G staking contract (`0xea224dBB…`). The **read** path — `list_validators`, `get_validator`, `validator_apr`, `validator_delegations` — is solid.
+`prepare_delegate` / `prepare_undelegate` build a transaction **to the per-validator contract** — the `addr` returned by `list_validators` / `get_validator` (0x-prefixed), **not** the staking root contract. The server encodes `delegate(address)` (selector `0x5c19a95c`) / `undelegate(address,uint256)` (`0x4d99dd16`) with **your own** (`from`) address as the delegator. So pass `validator` = the chosen validator's per-validator contract address, and `from` = your wallet. The **read** path — `list_validators`, `get_validator`, `validator_apr`, `validator_delegations` — returns the same `addr`.
 
-> ⚠️ The **write** path is **experimental**: the staking contract is a BeaconProxy whose delegate ABI couldn't be confirmed on-chain, so a best-effort `delegate(address)` / `undelegate(address,uint256)` signature is used. Verify on **testnet** before mainnet; if a delegation reverts, adjust the ABI server-side.
+> ⚠️ **Mainnet — real funds.** `/stake` spends real 0G; confirm the amount and prefer secure mode (`y/n` per signature). For a dry run, point the kit at a 0G testnet deployment first.
 
 ---
 
