@@ -9,6 +9,7 @@
     "wallet:import": "tsx scripts/wallet-manager.ts import",
     "signer": "tsx scripts/signer-daemon.ts",
     "security-test": "tsx scripts/security-test.ts",
+    "smoke:mcp": "tsx scripts/verify-mcp-contracts.ts",
     "demo:wallet": "tsx examples/01-wallet-and-faucet.ts",
     "demo:send": "tsx examples/02-send-tokens.ts",
     "demo:deploy": "tsx examples/03-deploy-and-verify.ts"

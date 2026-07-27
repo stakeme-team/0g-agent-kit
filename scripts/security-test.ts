@@ -1,7 +1,19 @@
 import { execFileSync } from "child_process";
+import { existsSync } from "fs";
 import * as path from "path";
 
-const GUARD_SCRIPT = path.resolve("scripts/guard.sh");
+const GUARD_SCRIPT = path.resolve("scripts/guard.sh").replaceAll("\\", "/");
+
+function resolveBash(): string {
+  if (process.env.BASH_PATH) return process.env.BASH_PATH;
+  if (process.platform === "win32") {
+    const gitBash = "C:\\Program Files\\Git\\bin\\bash.exe";
+    if (existsSync(gitBash)) return gitBash;
+  }
+  return "bash";
+}
+
+const BASH_BIN = resolveBash();
 
 // Commands that MUST be blocked
 const ATTACKS = [
@@ -65,7 +77,7 @@ for (const attack of ATTACKS) {
     // Pass the command as a single argv element (no shell) so pipes/quotes in
     // the attack string reach guard.sh verbatim and aren't re-parsed by the
     // host shell (cmd.exe on Windows mangles single-quoted pipes otherwise).
-    execFileSync("bash", [GUARD_SCRIPT, attack.cmd], {
+    execFileSync(BASH_BIN, [GUARD_SCRIPT, attack.cmd], {
       stdio: "pipe",
     });
     // Exit 0 = not blocked = FAIL
@@ -88,7 +100,7 @@ for (const attack of ATTACKS) {
 console.log("\n--- Safe commands (must be ALLOWED) ---");
 for (const safe of SAFE_COMMANDS) {
   try {
-    execFileSync("bash", [GUARD_SCRIPT, safe.cmd], {
+    execFileSync(BASH_BIN, [GUARD_SCRIPT, safe.cmd], {
       stdio: "pipe",
     });
     // Exit 0 = allowed = PASS
