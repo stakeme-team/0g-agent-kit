@@ -2,7 +2,6 @@ import { generateText } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { openai } from "@ai-sdk/openai";
 import { getMCPTools, closeMCPClient } from "./mcp-client.js";
-import { augmentToolsWithSigning } from "./signing-bridge.js";
 import { getEnv, logStep } from "./utils.js";
 
 function getModel() {
@@ -28,9 +27,8 @@ export interface AgentOptions {
 export async function runAgent(options: AgentOptions) {
   const { systemPrompt, userPrompt, maxSteps = 15, verbose = true } = options;
 
-  // Get MCP tools and augment with signing bridge
-  const mcpTools = await getMCPTools();
-  const tools = augmentToolsWithSigning(mcpTools);
+  // Native-current MCP is read-only. Never attach automatic signing.
+  const tools = await getMCPTools();
 
   const model = getModel();
 

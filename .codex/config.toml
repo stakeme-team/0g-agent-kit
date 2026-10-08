@@ -1,3 +1,2 @@
 [mcp_servers.0g]
-command = "npx"
-args = ["mcp-remote", "https://api.0g.exploreme.pro/mcp"]
+url = "https://0g.exploreme.pro/api/v1/mcp"

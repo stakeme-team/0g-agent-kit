@@ -22,7 +22,7 @@ export function getMcpUrl(): string {
   return getEnv(
     "ZEROG_MCP_URL",
     false
-  ) || "https://api.0g.exploreme.pro/mcp";
+  ) || "https://0g.exploreme.pro/api/v1/mcp";
 }
 
 export function getSignerMode(): "simple" | "secure" {

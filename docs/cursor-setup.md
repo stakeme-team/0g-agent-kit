@@ -1,40 +1,7 @@
-# Cursor + 0G MCP Setup
+# Cursor + 0G native-current MCP
 
-## Prerequisites
+Use a current Cursor release with remote MCP support. `.cursor/mcp.json` supplies the HTTP URL `https://0g.exploreme.pro/api/v1/mcp`. This source-contract endpoint is pending release; replace the URL with your running local/operator-approved backend when developing.
 
-- [Cursor IDE](https://cursor.com) installed
-- Cursor Pro subscription (for agent mode)
-- Node.js 20+
+Open this folder in Cursor, inspect its MCP settings and confirm the discovered catalogue. Ask: “Show indexer_info and five validators using list_validators with limit 5.” No wallet or private key is required. Pagination uses cursor, not offset. Validator lookups use address, not pool_id.
 
-## Quick Start
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/stakeme-team/0g-agent-kit
-cd 0g-agent-kit
-
-# 2. Install dependencies
-npm install
-
-# 3. Create a wallet
-npm run wallet:simple
-
-# 4. Open in Cursor
-cursor .
-```
-
-Cursor automatically detects `.cursor/mcp.json` and connects to the 0G MCP server.
-
-## Usage
-
-In Cursor's AI chat (Cmd+L), ask:
-
-```
-"Check my 0G wallet balance"
-"Send 0.001 tokens to a random address from a recent block"
-"Deploy the SimpleStorage contract from contracts/ and verify it"
-```
-
-## Verify MCP Connection
-
-Go to Settings > Developer > MCP to see connected servers. `0g` should be listed.
+Native-current is read-only and has limited indexed coverage. It cannot prepare transfers/delegations, deploy/verify contracts, claim faucets, sign or broadcast. Do not follow legacy write examples or expose `.env`/keystore files. See README for the supported catalogue.

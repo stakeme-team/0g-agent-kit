@@ -59,7 +59,7 @@ const SAFE_COMMANDS = [
   { cmd: 'ls -la', desc: 'ls' },
   { cmd: 'git status', desc: 'git status' },
   { cmd: 'echo "hello"', desc: 'echo hello' },
-  { cmd: 'npm run demo:wallet', desc: 'npm run demo' },
+  { cmd: 'npm run demo:explorer', desc: 'npm run demo' },
   { cmd: 'npx tsx scripts/sign-tx.ts', desc: 'sign-tx.ts' },
   { cmd: 'cat README.md', desc: 'cat README' },
   { cmd: 'grep WALLET_ADDRESS .env | cut -d= -f2', desc: 'grep WALLET_ADDRESS' },

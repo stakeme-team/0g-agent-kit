@@ -1,66 +1,15 @@
-# Ready-to-Use Prompts
+# Read-only 0G prompts
 
-Copy-paste these into Claude Code, Cursor, or Codex chat.
+Use tools/list from the connected native-current service as the authority. First ask indexer_info for indexed coverage; do not infer complete chain coverage from empty pages.
 
-## Wallet & Faucet
+- “Describe indexer_info coverage and stats_overview.”
+- “List five latest indexed blocks with list_blocks, then fetch one with get_block using its id.”
+- “Look up transaction <hash> with get_transaction.”
+- “Search for <query> using search with q.”
+- “Read get_account for public address <address>; preserve all wei as decimal strings.”
+- “List validators with limit 5; inspect a validator using get_validator with address, not pool_id.”
+- “Show account_staking_summary, account_delegations and account_undelegations for public address <address>; preserve exact shares.”
+- “Read staking_parameters and validator_statistics.”
+- “Show the next page using the returned cursor as a string, without offset.”
 
-```
-Check if I have a wallet set up, and if so, check its balance.
-```
-
-```
-Claim testnet tokens from the faucet for my wallet and show me the balance after.
-```
-
-## Send Tokens
-
-```
-Find a random address from the latest block on 0G and send 0.001 0G to it. Show me the transaction receipt.
-```
-
-```
-Send 0.01 0G to address 0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18 and wait for confirmation.
-```
-
-## Deploy & Verify Contract
-
-```
-Deploy the SimpleStorage contract from contracts/SimpleStorage.sol to 0G and verify it on the explorer.
-```
-
-```
-Deploy SimpleStorage, then call store(42), then call retrieve() to confirm the value was stored.
-```
-
-## Exploration
-
-```
-Show me the last 5 blocks on 0G with their transaction counts.
-```
-
-```
-Search for the top ERC-20 tokens on 0G and show their details.
-```
-
-```
-Look up my wallet's transaction history.
-```
-
-## 0G-native prompts
-
-### Staking
-- "List 0G validators by APR and show the top 5 with their commission."
-- "Delegate 0.5 0G to validator <addr> (use the per-validator contract address from list_validators): prepare, sign, broadcast, and confirm the delegation."
-- "Show my current delegations and the network APR."
-
-### Data Availability (DA)
-- "Show 0G DA daily volume for the last 7 days."
-- "List recent DA events and the active DA signers."
-
-### Storage
-- "List the latest 0G storage files and the top storage miners."
-- "Show 0G storage daily volume trend this month."
-
-### Explorer
-- "Search 0G for <address-or-tx-or-block> and summarize what it is."
-- "Give me a 0G network overview: latest block, tx throughput, gas, native price."
+Do not ask this service to transfer, delegate, withdraw, deploy, verify, claim a faucet, sign or broadcast: those capabilities are absent. No private key is required for reads.

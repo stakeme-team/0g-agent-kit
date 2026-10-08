@@ -1,70 +1,30 @@
-# 0G Agent Kit
+# 0G Agent Kit usage
 
-You are working with the **0G blockchain** through an MCP server. This file tells you how to interact with it safely and effectively.
+This kit connects to the 0G native-current **read-only** MCP catalogue, chain 16661. `.mcp.json` points to `https://0g.exploreme.pro/api/v1/mcp`, a source-contract endpoint pending release. Connection failure may mean it has not been deployed; use a running local/operator-approved endpoint for development, not the retired API hostname.
 
-> ⚠️ **MAINNET — REAL FUNDS.** The default network is 0G mainnet (chainId 16661). `prepare_native_transfer` / `prepare_transaction` move **real 0G**. Prefer **secure mode with manual approval** (`npm run signer -- --manual`) so every signature needs your `y/n`. There is **no faucet on mainnet**.
+## Read workflow
 
-## MCP Server
+Inspect `tools/list` and `indexer_info` before describing coverage. Supported tools are blocks/transactions (`list_blocks`, `get_block` with `id`, `get_transaction` with `hash`), explorer (`gas_oracle`, `stats_overview`, `indexer_info`, `search` with `q`), accounts/tokens (`get_account` with `address`, `list_tokens`), validators (`list_validators`, `get_validator` with `address`, `validator_statistics`) and indexed staking (`account_delegations`, `account_undelegations`, `account_staking_summary`, `validator_delegations`, `validator_undelegations`, `staking_parameters`). Account/validator scoped tools require a public EVM `address`; validators are not keyed by legacy pool IDs.
 
-The 0G MCP server is connected automatically via `.mcp.json` (`https://api.0g.exploreme.pro/mcp`). Key tools:
+Paginated tools accept `limit` 1–100 and `cursor`, not `offset`. Preserve wei, tokens and shares as exact decimal strings. Retain API source, scope and availability metadata; null/unavailable values and empty pages are not proof of zero holdings or complete history. Tool errors have `isError: true`; data is under `structuredContent.data`.
 
-- **Transactions (write):** `prepare_native_transfer`, `prepare_erc20_transfer`, `prepare_transaction`, `broadcast_signed_raw_transaction`, `wait_for_transaction`
-- **Balances / accounts (read):** `rpc_native_balance`, `rpc_token_balance`, `get_account`, `list_account_transactions`, `list_account_tokens`
-- **Blocks / txs (read):** `list_blocks`, `get_block`, `get_transaction`, `tx_summary`, `list_transactions`
-- **Contracts (read + verify):** `rpc_read_contract`, `get_contract`, `contract_code`, `verifier_compiler_versions`, `verify_contract_std_json`, `get_verification_status`
-- **Tokens / NFTs (read):** `list_tokens`, `get_token`, `list_token_holders`, `nft_instance_detail`
-- **Staking (write + read):** `prepare_delegate`, `prepare_undelegate`, `list_validators`, `get_validator`, `validator_delegations`, `validator_apr`
-- **0G DA / storage (read):** `list_da_events`, `da_daily_volume`, `list_da_signers`, `list_storage_files`, `get_storage_file`, `list_storage_miners`, `storage_daily_volume`
-- **Explorer (read):** `search`, `stats_overview`, `prices`
-- **Faucet (testnet only):** `claim_faucet_tokens`, `get_faucet_payout_status`
+## Unsupported workflows
 
-## SECURITY RULES — MANDATORY
+No native-current transaction preparation, signing, broadcast, faucet, contract deployment/verification, DA or storage tools exist. Obsolete `/wallet`, `/send`, `/deploy` and `/stake` command integrations were removed. Do not invent replacement write workflows. `runAgent` does not attach automatic signing.
 
-### NEVER do any of the following:
-- Read the `.env` file (cat, head, tail, less, grep, or any other method)
-- Read the `.keystore/` directory or any files in it
-- Access, print, or log the `PRIVATE_KEY` environment variable
-- Run `env`, `printenv`, `set`, or `export` to list environment variables
-- Store, display, or transmit any private key in any form
+## Secrets and separate local utilities
 
-### Wallet address
-Read `WALLET_ADDRESS` from `.env` using grep — this is the ONLY value you may read from `.env`:
-```bash
-grep WALLET_ADDRESS .env | cut -d'=' -f2
-```
+Explorer reads need no private key or generated wallet. Use an explicitly supplied public address. Never read/disclose `.env`, private-key variables, `.keystore`, passwords or environment listings. Never send credentials to an AI model or MCP server. The shell guard remains enabled but is not a sandbox.
 
-## Transaction Signing Flow
+Standalone wallet/signing scripts remain local-only and are not needed for MCP. They must not be invoked by an explorer read workflow. Any independent operator-authorized mainnet signing uses real funds; prefer the secure daemon with `--manual` approval. Do not automatically sign or broadcast on mainnet.
 
-You CANNOT sign transactions directly. Use the signing script:
+## Commands
 
-1. **Prepare** via MCP: call `prepare_native_transfer` / `prepare_transaction` → unsigned tx JSON.
-2. **Sign** locally: `echo '<unsigned_tx_json>' | npx tsx scripts/sign-tx.ts` → prints ONLY the signed hex.
-3. **Broadcast** via MCP: `broadcast_signed_raw_transaction` with the signed hex.
-4. **Confirm** via MCP: `wait_for_transaction` with the returned hash.
+- `npm ci`
+- `npm run demo:explorer` — coverage and recent blocks, no wallet
+- `npm run demo:staking` — validators and staking parameters, no wallet
+- `npm run demo:account` — account/staking reads for public `WALLET_ADDRESS`
+- `npm run smoke:mcp` — real initialize/discovery/read calls against `ZEROG_MCP_URL`
+- `npm run check-types`, `npm test`, `npm run security-test` — verification gates
 
-## Contract Deployment Flow
-
-1. Read bytecode from `contracts/compiled/SimpleStorage.json`.
-2. `prepare_transaction` with `from`=wallet, **no** `to`, `data`=bytecode.
-3. Sign: `echo '<unsigned_tx>' | npx tsx scripts/sign-tx.ts`.
-4. `broadcast_signed_raw_transaction`.
-5. `wait_for_transaction` — the receipt's `contractAddress` is the deployed address.
-6. Verify: `verifier_compiler_versions` → then `verify_contract_std_json` with address + standard-JSON input.
-
-## Staking Flow (0G-native)
-
-1. `list_validators` → choose a validator (note its `addr` + `validator_apr`).
-2. `prepare_delegate` with `from`=wallet, `validator`=the chosen validator's `addr` (the **per-validator contract address**, 0x-prefixed — **not** the staking root contract), `amount`=0G to stake.
-3. Sign → `broadcast_signed_raw_transaction` → `wait_for_transaction`.
-4. `validator_delegations` (or `get_account`) to confirm the new delegation.
-
-> 📌 **Delegate/undelegate target the per-validator contract.** `prepare_delegate` / `prepare_undelegate` build a tx **to the validator's per-validator contract** (its `list_validators` / `get_validator` `addr`, 0x-prefixed) calling `delegate(address)` / `undelegate(address,uint256)` with **your own** (`from`) address as the delegator. Pass `validator` = that per-validator contract address and `from` = your wallet. Undelegate takes `shares` (not an amount). Mainnet spends real 0G — verify on a testnet deployment first.
-
-## Faucet Flow (testnet only)
-
-On mainnet there is no faucet — `claim_faucet_tokens` will say so. On a testnet deployment: `claim_faucet_tokens` with your address → poll `get_faucet_payout_status` → `rpc_native_balance` to confirm.
-
-## Available Scripts
-- `npx tsx scripts/sign-tx.ts` — sign tx (stdin JSON → stdout signed hex)
-- `npx tsx scripts/wallet-manager.ts` — wallet management (USER runs this, not the agent)
-- `npx tsx scripts/signer-daemon.ts` — signing daemon, secure mode (USER runs this)
+See README and docs/prompts.md for setup and honest read-only prompts.

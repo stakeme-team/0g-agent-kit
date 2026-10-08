@@ -2,7 +2,7 @@
   "mcpServers": {
     "0g": {
       "type": "http",
-      "url": "https://api.0g.exploreme.pro/mcp"
+      "url": "https://0g.exploreme.pro/api/v1/mcp"
     }
   }
 }
