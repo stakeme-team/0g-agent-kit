@@ -64,6 +64,8 @@ try {
 
 For Vercel AI SDK agents, use `runAgent({systemPrompt, userPrompt})` and configure `AI_PROVIDER` plus the selected provider API key locally. `runAgent` exposes discovered MCP tools **without an automatic signing bridge**. The native service catalogue is read-only. Do not connect an untrusted write-capable MCP endpoint and assume it has the same contract.
 
+`getMCPTools()` returns the pinned AI SDK 4's public `ToolSet`, adapting discovered schemas and cancellation without forwarding model messages to MCP.
+
 Each `runAgent` call closes its MCP client on success or failure, including tool discovery failures, so a later call establishes a fresh connection.
 
 ## Local signing utilities are separate

@@ -45,7 +45,7 @@ export async function runAgent(options: AgentOptions) {
       model,
       system: systemPrompt,
       prompt: userPrompt,
-      tools: tools as any,
+      tools,
       maxSteps,
       onStepFinish: (step) => {
         if (verbose) {
