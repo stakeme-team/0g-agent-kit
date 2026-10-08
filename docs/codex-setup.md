@@ -1,58 +1,14 @@
-# OpenAI Codex + 0G MCP Setup
+# Codex + 0G native-current MCP
 
-## Prerequisites
-
-- [OpenAI Codex CLI](https://github.com/openai/codex) installed
-- ChatGPT Pro subscription
-- Node.js 20+
-
-## Important: Codex MCP Limitation
-
-Codex supports MCP servers via **STDIO transport only** (not remote HTTP/SSE). To connect to the remote 0G MCP server, we use `mcp-remote` as a bridge.
-
-## Quick Start
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/stakeme-team/0g-agent-kit
-cd 0g-agent-kit
-
-# 2. Install dependencies
-npm install
-
-# 3. Create a wallet
-npm run wallet:simple
-
-# 4. Run Codex
-codex
-```
-
-Codex reads `.codex/config.toml` which uses `mcp-remote` to proxy the 0G MCP server through STDIO.
-
-## Configuration
-
-The `.codex/config.toml` contains:
+Current Codex supports remote Streamable HTTP MCP directly. No STDIO bridge or `mcp-remote` installation is needed.
 
 ```toml
 [mcp_servers.0g]
-command = "npx"
-args = ["mcp-remote", "https://api.0g.exploreme.pro/mcp"]
+url = "https://0g.exploreme.pro/api/v1/mcp"
 ```
 
-This uses the `mcp-remote` npm package to bridge HTTP/SSE to STDIO.
+This is the source-contract URL pending release, not a production availability claim. Replace it in `.codex/config.toml` with a running local/operator-approved backend URL for development. Do not use the retired API hostname.
 
-## Usage
+Start Codex from this folder; inspect its MCP connections and discovered tools. Ask: “Read indexer_info and list five latest blocks; state coverage limitations.” No wallet, signing daemon or private key is required.
 
-In Codex, ask:
-
-```
-"Check my 0G wallet balance — address is in .env as WALLET_ADDRESS"
-"Send 0.001 tokens to a random address from a recent block"
-"Deploy the SimpleStorage contract and verify it on the explorer"
-```
-
-## Troubleshooting
-
-- **mcp-remote not found**: Run `npm install -g mcp-remote`
-- **Timeout errors**: The `mcp-remote` bridge may have connection timeouts. Try restarting Codex.
-- **Tool discovery fails**: Ensure `https://api.0g.exploreme.pro/mcp` is accessible from your network.
+Native-current tools are read-only. Pagination uses cursor and limit 1–100; look up validators by address. Legacy transaction preparation/broadcast, faucet, verification, DA and storage claims do not apply. If connection fails, verify deployment/URL first; an unreleased endpoint cannot be fixed with a transport bridge.

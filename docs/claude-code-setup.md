@@ -1,73 +1,9 @@
-# Claude Code + 0G MCP Setup
+# Claude Code + 0G native-current MCP
 
-## Prerequisites
+Use a current Claude Code release with HTTP MCP support. Install dependencies with `npm ci` for SDK examples; wallet setup is not required.
 
-- [Claude Code](https://claude.ai/code) installed
-- Claude Pro or Max subscription
-- Node.js 20+
+The checked-in `.mcp.json` points to `https://0g.exploreme.pro/api/v1/mcp`, a source-contract endpoint pending release. Replace its URL with a running local/operator-approved service until released. The retired `api.0g.exploreme.pro/mcp` is not used.
 
-## Quick Start
+Start `claude` in this checkout and inspect `/mcp` to verify discovery. Ask: “Use indexer_info to describe coverage, then list five latest indexed blocks.” Tools are read-only; do not request legacy /send, /deploy or /stake execution. MCP cannot sign or broadcast.
 
-```bash
-# 1. Clone the repo
-git clone https://github.com/stakeme-team/0g-agent-kit
-cd 0g-agent-kit
-
-# 2. Install dependencies
-npm install
-
-# 3. Create a wallet
-npm run wallet:simple
-# or for enhanced security:
-npm run wallet:secure
-
-# 4. Open Claude Code
-claude
-```
-
-That's it! Claude Code automatically detects `.mcp.json` and connects to the 0G MCP server.
-
-## Usage
-
-Once inside Claude Code, you can use the built-in skills:
-
-```
-/wallet    — Create wallet and get testnet tokens from faucet
-/send      — Send tokens to a random address from a recent block
-/deploy    — Deploy and verify a smart contract
-```
-
-Or just chat naturally:
-
-```
-"Check my wallet balance"
-"Send 0.001 0G to a random address"
-"Deploy the SimpleStorage contract and verify it"
-```
-
-## Security Modes
-
-### Simple Mode (default)
-Private key stored in `.env`, protected by guard hooks that block Claude from reading it.
-
-```bash
-npm run wallet:simple
-```
-
-### Secure Mode
-Private key encrypted in keystore, signing daemon runs in separate process.
-
-```bash
-# Create encrypted wallet
-npm run wallet:secure
-
-# Start signing daemon (separate terminal)
-npm run signer
-
-# Then use Claude Code normally
-claude
-```
-
-## Verify MCP Connection
-
-Inside Claude Code, run `/mcp` to see connected MCP servers. You should see `0g` listed with its tools.
+Existing local signing/guard utilities are separate from explorer reads. Never expose private keys, `.env`, keystores or passwords. Obsolete write/faucet skill integrations were removed; use docs/prompts.md instead. See README for catalogue and limitations.

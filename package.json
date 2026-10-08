@@ -4,15 +4,17 @@
   "description": "AI Agent Kit for the 0G blockchain — interact via MCP with Claude Code, Cursor, Codex, or programmatically with AI SDK",
   "type": "module",
   "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
     "wallet:simple": "tsx scripts/wallet-manager.ts generate --simple",
     "wallet:secure": "tsx scripts/wallet-manager.ts generate --secure",
     "wallet:import": "tsx scripts/wallet-manager.ts import",
     "signer": "tsx scripts/signer-daemon.ts",
     "security-test": "tsx scripts/security-test.ts",
     "smoke:mcp": "tsx scripts/verify-mcp-contracts.ts",
-    "demo:wallet": "tsx examples/01-wallet-and-faucet.ts",
-    "demo:send": "tsx examples/02-send-tokens.ts",
-    "demo:deploy": "tsx examples/03-deploy-and-verify.ts"
+    "demo:explorer": "tsx examples/01-explorer.ts",
+    "demo:account": "tsx examples/02-account.ts",
+    "demo:staking": "tsx examples/03-staking.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.0",
