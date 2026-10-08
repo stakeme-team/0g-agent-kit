@@ -64,6 +64,8 @@ try {
 
 For Vercel AI SDK agents, use `runAgent({systemPrompt, userPrompt})` and configure `AI_PROVIDER` plus the selected provider API key locally. `runAgent` exposes discovered MCP tools **without an automatic signing bridge**. The native service catalogue is read-only. Do not connect an untrusted write-capable MCP endpoint and assume it has the same contract.
 
+Each `runAgent` call closes its MCP client on success or failure, including tool discovery failures, so a later call establishes a fresh connection.
+
 ## Local signing utilities are separate
 
 Existing `wallet-manager.ts`, `wallet.ts`, `sign-tx.ts`, keystore and signer-daemon utilities remain local-only. They are **not part of the native MCP read workflow**, and the service cannot provide unsigned transactions or broadcast signed ones. No remote server or model needs your private key. Never send `.env`, keystores or passwords to an agent/server.

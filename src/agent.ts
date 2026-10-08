@@ -27,20 +27,20 @@ export interface AgentOptions {
 export async function runAgent(options: AgentOptions) {
   const { systemPrompt, userPrompt, maxSteps = 15, verbose = true } = options;
 
-  // Native-current MCP is read-only. Never attach automatic signing.
-  const tools = await getMCPTools();
-
-  const model = getModel();
-
-  if (verbose) {
-    const provider = getEnv("AI_PROVIDER", false) || "anthropic";
-    console.log(`\nProvider: ${provider}`);
-    console.log(`Tools loaded: ${Object.keys(tools).length}`);
-    console.log(`Max steps: ${maxSteps}`);
-    console.log(`\n${"=".repeat(60)}\n`);
-  }
-
   try {
+    // Native-current MCP is read-only. Never attach automatic signing.
+    const tools = await getMCPTools();
+
+    const model = getModel();
+
+    if (verbose) {
+      const provider = getEnv("AI_PROVIDER", false) || "anthropic";
+      console.log(`\nProvider: ${provider}`);
+      console.log(`Tools loaded: ${Object.keys(tools).length}`);
+      console.log(`Max steps: ${maxSteps}`);
+      console.log(`\n${"=".repeat(60)}\n`);
+    }
+
     const result = await generateText({
       model,
       system: systemPrompt,
